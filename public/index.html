@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Waifu Catcher — Telegram Web App</title>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Google Fonts: Montserrat & Orbitron for Anime UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Header Bar -->
+    <header class="app-header">
+      <div class="user-badge" id="header-user-badge">
+        <img id="user-avatar" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=100" alt="Avatar">
+        <div class="user-info">
+          <span id="user-name" class="user-name">Loading...</span>
+          <span id="user-level" class="user-level">⭐ Lvl 1</span>
+        </div>
+      </div>
+      <div class="header-balances">
+        <span class="currency-chip">💎 <span id="bal-diamonds">0</span></span>
+        <span class="currency-chip">🪙 <span id="bal-gold">0</span></span>
+        <span class="currency-chip">🟡 <span id="bal-softcoins">0</span></span>
+      </div>
+    </header>
+
+    <!-- Main Content Dynamic View -->
+    <main id="main-content" class="main-content">
+      <!-- Views loaded dynamically via JS -->
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="home">
+        <span class="icon">🏠</span>
+        <span class="label">Home</span>
+      </button>
+      <button class="nav-btn" data-tab="games">
+        <span class="icon">🎮</span>
+        <span class="label">Games</span>
+      </button>
+      <button class="nav-btn" data-tab="market">
+        <span class="icon">🛒</span>
+        <span class="label">Market</span>
+      </button>
+      <button class="nav-btn" data-tab="rewards">
+        <span class="icon">🎁</span>
+        <span class="label">Rewards</span>
+      </button>
+      <button class="nav-btn" data-tab="collection">
+        <span class="icon">🃏</span>
+        <span class="label">Cards</span>
+      </button>
+      <button class="nav-btn" data-tab="leaderboard">
+        <span class="icon">🏆</span>
+        <span class="label">Ranks</span>
+      </button>
+      <button class="nav-btn" data-tab="profile">
+        <span class="icon">👤</span>
+        <span class="label">Profile</span>
+      </button>
+      <button class="nav-btn admin-nav-btn hidden" id="nav-admin-btn" data-tab="admin">
+        <span class="icon">⚙️</span>
+        <span class="label">Admin</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Modal / Overlay Container -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card" id="modal-content">
+      <!-- Modal Inner Content -->
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
