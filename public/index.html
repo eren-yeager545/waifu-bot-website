@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Waifu Catcher Telegram Web App</title>
+  <!-- Telegram Web App JS SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Header / Bar -->
+    <header class="top-header">
+      <div class="user-pill">
+        <img id="user-avatar" src="https://picsum.photos/100" alt="Avatar" class="avatar-img">
+        <div class="user-meta">
+          <span id="user-name" class="username">Loading...</span>
+          <div class="level-badge">Lvl <span id="user-level">1</span></div>
+        </div>
+      </div>
+      <div class="currency-pill">
+        <div class="curr-item coins-item">
+          <span class="curr-icon">🪙</span>
+          <span id="user-coins">0</span>
+        </div>
+        <div class="curr-item gems-item">
+          <span class="curr-icon">💎</span>
+          <span id="user-gems">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="content-container">
+
+      <!-- HOME / PROFILE VIEW -->
+      <section id="view-home" class="tab-view active">
+        <div class="hero-card">
+          <div class="favorite-waifu-display">
+            <div id="favorite-card-container" class="waifu-display-box">
+              <div class="empty-fav-placeholder">
+                <span class="placeholder-icon">🌸</span>
+                <p>No Favorite Waifu Selected</p>
+                <button id="btn-select-fav" class="btn-secondary small">Set Favorite</button>
+              </div>
+            </div>
+          </div>
+          <div class="xp-container">
+            <div class="xp-text">
+              <span>Level <strong id="home-lvl">1</strong> Progress</span>
+              <span id="xp-progress-text">0 / 100 XP</span>
+            </div>
+            <div class="xp-bar-outer">
+              <div id="xp-bar-inner" class="xp-bar-inner" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-icon">🎴</span>
+            <div class="stat-info">
+              <span id="stat-cards-count" class="stat-value">0</span>
+              <span class="stat-label">Collected</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⚡</span>
+            <div class="stat-info">
+              <span id="stat-total-power" class="stat-value">0</span>
+              <span class="stat-label">Total Power</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">🔥</span>
+            <div class="stat-info">
+              <span id="stat-streak" class="stat-value">0</span>
+              <span class="stat-label">Streak Days</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button class="action-btn gacha-btn" onclick="switchTab('games')">
+            <span class="action-icon">🎯</span>
+            <div class="action-text">
+              <strong>Catch Waifu</strong>
+              <small>Gacha Roll & Mini-games</small>
+            </div>
+          </button>
+          <button class="action-btn market-btn" onclick="switchTab('market')">
+            <span class="action-icon">🏪</span>
+            <div class="action-text">
+              <strong>Marketplace</strong>
+              <small>Buy & Sell Cards</small>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- GAMES VIEW -->
+      <section id="view-games" class="tab-view">
+        <div class="section-title">
+          <h2>Games & Catch</h2>
+          <p>Catch new waifus or play mini-games to earn coins!</p>
+        </div>
+
+        <!-- Gacha Catcher Card -->
+        <div class="game-card gacha-section">
+          <div class="game-header">
+            <h3> Waifu Summon Gacha</h3>
+            <span id="catch-timer" class="badge-timer">Ready!</span>
+          </div>
+          <div class="gacha-animation-box">
+            <div id="gacha-orb" class="gacha-orb">
+              <span>🔮</span>
+            </div>
+            <div id="gacha-result" class="gacha-result hidden"></div>
+          </div>
+          <button id="btn-catch-waifu" class="btn-primary large">
+            <span>✨ Catch Waifu ✨</span>
+          </button>
+        </div>
+
+        <!-- Memory Game Section -->
+        <div class="game-card memory-section">
+          <div class="game-header">
+            <h3>🧠 Waifu Memory Match</h3>
+            <span class="badge-tag">Earn Coins & XP</span>
+          </div>
+          <div id="memory-game-board" class="memory-board">
+            <button id="btn-start-memory" class="btn-secondary">Start Memory Game</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLLECTION VIEW -->
+      <section id="view-collection" class="tab-view">
+        <div class="section-title row-between">
+          <h2>Waifu Collection</h2>
+          <span id="collection-count-badge" class="badge-info">0 Cards</span>
+        </div>
+
+        <div class="filter-bar">
+          <button class="filter-chip active" onclick="filterCollection('all', this)">All</button>
+          <button class="filter-chip" onclick="filterCollection('Legendary', this)">Legendary</button>
+          <button class="filter-chip" onclick="filterCollection('Epic', this)">Epic</button>
+          <button class="filter-chip" onclick="filterCollection('Rare', this)">Rare</button>
+          <button class="filter-chip" onclick="filterCollection('Common', this)">Common</button>
+        </div>
+
+        <div id="collection-grid" class="cards-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- MARKETPLACE VIEW -->
+      <section id="view-market" class="tab-view">
+        <div class="section-title">
+          <h2>Marketplace & Packs</h2>
+          <p>Trade with players or buy card booster packs!</p>
+        </div>
+
+        <!-- Subtabs -->
+        <div class="subtab-bar">
+          <button class="subtab-btn active" onclick="switchMarketSubtab('packs', this)">Packs</button>
+          <button class="subtab-btn" onclick="switchMarketSubtab('listings', this)">Player Market</button>
+        </div>
+
+        <!-- Packs Container -->
+        <div id="market-packs-container" class="market-subview active">
+          <div id="packs-grid" class="packs-grid"></div>
+        </div>
+
+        <!-- Listings Container -->
+        <div id="market-listings-container" class="market-subview">
+          <div id="listings-grid" class="listings-grid"></div>
+        </div>
+      </section>
+
+      <!-- TASKS & STREAK VIEW -->
+      <section id="view-tasks" class="tab-view">
+        <div class="section-title">
+          <h2>Daily Tasks & Streaks</h2>
+          <p>Complete daily missions to earn coins & gems!</p>
+        </div>
+
+        <!-- Streak Card -->
+        <div class="streak-card">
+          <div class="streak-header">
+            <span class="streak-icon">🔥</span>
+            <div>
+              <h3>Daily Login Streak</h3>
+              <p><strong id="task-streak-count">0</strong> Days Streak</p>
+            </div>
+          </div>
+          <button id="btn-claim-streak" class="btn-primary">Claim Daily Bonus</button>
+        </div>
+
+        <div id="tasks-list" class="tasks-list">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- REWARDS & INVITE VIEW -->
+      <section id="view-rewards" class="tab-view">
+        <div class="section-title">
+          <h2>Invite Friends & Earn</h2>
+          <p>Earn 200 Coins & 10 Gems for every friend invited!</p>
+        </div>
+
+        <div class="referral-box">
+          <h3>Your Referral Link</h3>
+          <div class="link-input-group">
+            <input type="text" id="invite-link-input" readonly value="Loading...">
+            <button id="btn-copy-invite" class="btn-secondary">Copy</button>
+          </div>
+        </div>
+
+        <div class="referrals-section">
+          <h3>Invited Friends (<span id="ref-count">0</span>)</h3>
+          <div id="referrals-list" class="referrals-list"></div>
+        </div>
+      </section>
+
+      <!-- ACHIEVEMENTS VIEW -->
+      <section id="view-achievements" class="tab-view">
+        <div class="section-title">
+          <h2>Achievements</h2>
+          <p>Unlock achievements to claim rewards!</p>
+        </div>
+        <div id="achievements-grid" class="achievements-grid"></div>
+      </section>
+
+      <!-- LEADERBOARD VIEW -->
+      <section id="view-leaderboard" class="tab-view">
+        <div class="section-title">
+          <h2>Leaderboard</h2>
+        </div>
+
+        <div class="subtab-bar">
+          <button class="subtab-btn active" onclick="switchLbSubtab('collectors', this)">Collectors</button>
+          <button class="subtab-btn" onclick="switchLbSubtab('richest', this)">Richest</button>
+          <button class="subtab-btn" onclick="switchLbSubtab('levels', this)">Top Level</button>
+        </div>
+
+        <div id="leaderboard-list" class="leaderboard-list"></div>
+      </section>
+
+      <!-- ADMIN VIEW (OWNER/DEVELOPER) -->
+      <section id="view-admin" class="tab-view">
+        <div class="section-title">
+          <h2>Owner / Developer Panel</h2>
+        </div>
+
+        <div class="admin-metrics-grid">
+          <div class="admin-metric"><span id="adm-users">0</span><small>Users</small></div>
+          <div class="admin-metric"><span id="adm-cards">0</span><small>Cards in DB</small></div>
+          <div class="admin-metric"><span id="adm-collected">0</span><small>Cards Owned</small></div>
+        </div>
+
+        <div class="admin-section-box">
+          <h3>Modify User Resources</h3>
+          <div class="form-group">
+            <input type="number" id="adm-input-id" placeholder="User ID">
+            <input type="number" id="adm-input-coins" placeholder="Coins">
+            <input type="number" id="adm-input-gems" placeholder="Gems">
+            <input type="number" id="adm-input-level" placeholder="Level">
+            <select id="adm-input-role">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+              <option value="owner">Owner</option>
+            </select>
+            <button id="btn-adm-update-user" class="btn-primary">Update User</button>
+          </div>
+        </div>
+
+        <div class="admin-section-box">
+          <h3>Grant Waifu Card</h3>
+          <div class="form-group">
+            <input type="number" id="adm-grant-userid" placeholder="User ID">
+            <input type="number" id="adm-grant-cardid" placeholder="Card ID">
+            <button id="btn-adm-grant-card" class="btn-secondary">Grant Card</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item" data-tab="games" onclick="switchTab('games')">
+        <span class="nav-icon">🎯</span>
+        <span class="nav-label">Catch</span>
+      </button>
+      <button class="nav-item" data-tab="collection" onclick="switchTab('collection')">
+        <span class="nav-icon">🎴</span>
+        <span class="nav-label">Cards</span>
+      </button>
+      <button class="nav-item" data-tab="market" onclick="switchTab('market')">
+        <span class="nav-icon">🏪</span>
+        <span class="nav-label">Market</span>
+      </button>
+      <button class="nav-item" data-tab="tasks" onclick="switchTab('tasks')">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Tasks</span>
+      </button>
+      <button class="nav-item" data-tab="rewards" onclick="switchTab('rewards')">
+        <span class="nav-icon">🎁</span>
+        <span class="nav-label">Invite</span>
+      </button>
+      <button class="nav-item" data-tab="achievements" onclick="switchTab('achievements')">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label">Badges</span>
+      </button>
+      <button class="nav-item" data-tab="leaderboard" onclick="switchTab('leaderboard')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Top</span>
+      </button>
+      <button id="nav-item-admin" class="nav-item hidden" data-tab="admin" onclick="switchTab('admin')">
+        <span class="nav-icon">⚡</span>
+        <span class="nav-label">Admin</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Modal Container -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>

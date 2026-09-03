@@ -1,0 +1,16 @@
+{
+  "name": "waifu-catcher-telegram-webapp",
+  "version": "1.0.0",
+  "description": "Waifu Catcher Telegram Web App & Backend API",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7",
+    "sqlite": "^5.1.1"
+  }
+}
