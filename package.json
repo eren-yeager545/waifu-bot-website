@@ -1,7 +1,7 @@
 {
   "name": "waifu-catcher-telegram-webapp",
   "version": "1.0.0",
-  "description": "Waifu Catcher Telegram Web App & Backend API",
+  "description": "Waifu Catcher Telegram Mini App - Gacha collection game with Telegram initData authentication, real-time user synchronization, marketplace trading, daily tasks, and leaderboards.",
   "main": "server.js",
   "type": "module",
   "scripts": {
